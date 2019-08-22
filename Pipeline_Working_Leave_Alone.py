@@ -401,7 +401,7 @@ for file in shifts:
         return subimg
             
     #Runs a collection of the above functions in order to get the 2-D FWHM, returns the FWHM#
-    def main(): 
+    def main(file): 
   
         hdulist = load_data()    
         subimg = get_subimg(hdulist)    
@@ -429,7 +429,7 @@ for file in shifts:
     for lines in stars:
         if __name__ == '__main__': 
             guess_x, guess_y = stars['xcentroid'][i], stars['ycentroid'][i] 
-            fwhm = main()   
+            fwhm = main(file)   
             fwhm_array.append(fwhm)
             fwhm_median = np.median(fwhm_array)
         i+=1
@@ -443,7 +443,7 @@ def sort():
     files = shifts[idx]
     print(files)
     print(len(shifts))
-    top = files[:int(0.01*len(shifts))]
+    top = files[:int(0.05*len(shifts))]
     print(top)
     return top
 top = sort()
@@ -463,7 +463,7 @@ top = sort()
 shifts = top
 shifted = np.array([fits.getdata(image) for image in shifts])
 shifted_median = np.median(shifted, axis = 0)
-outfile = '/Users/jamestaylor/Desktop/Test_Directory/Results_Images/LI_reduced.fits'
+outfile = '/Users/jamestaylor/Desktop/Test_Directory/Results_Images/LI_reduced_5.fits'
 hdu = fits.PrimaryHDU(shifted_median)
 hdu.writeto(outfile, overwrite = True)
 
@@ -486,7 +486,7 @@ for lines in stars:
     ax.set_ylabel('y (pix)')
     fig.colorbar(img, label = 'Counts')
     fig.savefig('/Users/jamestaylor/Desktop/Test_Directory/Results_Images/star'+str(i+1)+'_lp.pdf', bbox_inches = 'tight')
-    infile.write('Star '+ str(i+1)+' Peak Position ('+str(round(guess_x,2))+','+str(round(guess_y,2))+')\n FWHM :'+str(round(fwhm,1))+'\n')
+    infile.write('Star '+ str(i+1)+' Peak Position ('+str(round(guess_x,2))+','+str(round(guess_y,2))+')\n FWHM :'+str(round(fwhm*.08,2))+' arcsec\n')
     i+=1
 infile.close()
 end = time.time()
